@@ -1,0 +1,92 @@
+   
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>Single page template</title> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+</head> 
+  <script>
+    
+  
+  var server_url = "";
+  
+  //ajax 설명
+  
+    function login(){
+    	
+    	var tid = $('#text_id').val();
+    	// tid 변수를 만들고, text_id라는 id를 가진 텍스트폼의 값을 가져올것    	
+    	var tpasswd = $('#text_passwd').val();
+      $.ajax({
+          url: server_url + "board",
+          data: {act: 'view', page: "1"},
+          type: 'GET',
+          success: function (data){
+        	  var listItem = "";
+        	  for(var i = 0 ; i < data.list.length ; i++){
+        		  listItem += "<li><a href='#detail' onClick='gotoDetail(" + data.list[i].num + ");'>" + data.list[i].num + ". " + data.list[i].title + "</a></li>";
+        	  }
+        	  $("#boardli").html(listItem).listview("refresh");
+              }
+      });
+            
+            }
+  
+    login();
+    
+    function gotoDetail(aaa){
+    	$.ajax({
+            url: server_url + "board",
+            data: {act: 'detail', dnum: aaa},
+            type: 'GET',
+            success: function (data){
+          	  var listItem = "<li>" + data.num + ". " + data.title + "</li>";
+          	  listItem += "<li>" + data.text + "</li>";
+          	listItem += "<li>" + data.time_reg + "</li>";
+          	  $("#detailli").html(listItem).listview("refresh");
+                }
+        });
+    }
+    
+  </script>
+
+<body> 
+
+<div data-role="page">
+
+	<div data-role="header">
+		<h1>이유향 게시판</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<ul data-role="listview" id="boardli"></ul>
+	</div><!-- /content -->
+	
+	<div data-role="footer">
+		<h4>Footer content</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+
+<div data-role="page" id="detail">
+
+	<div data-role="header">
+		<h1>상세정보</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<ul data-role="listview" id="detailli"></ul>
+	</div><!-- /content -->
+	
+	<div data-role="footer">
+		<h4>Footer content</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+</body>
+</html>
